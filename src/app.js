@@ -25,9 +25,14 @@ const messages = [];
 socketServer.on("connection", (socketClient) => {
   console.log("Cliente " + socketClient.id + " conectado");
 
-  socketClient.on("message", (data) => {
-    messages.push("Cliente " + socketClient.id + " dice: " + data);
+  socketServer.emit('log', messages)
 
+  socketClient.on('auth', username =>{
+    socketClient.broadcast.emit('newUserConnection', username)
+  })
+
+  socketClient.on("message", (data) => {
+    messages.push(data); 
     socketServer.emit("log", messages);
   });
 });
